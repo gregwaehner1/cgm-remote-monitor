@@ -293,31 +293,35 @@
                 //in this case the SGV is scaled
                 if (focusPoint.y < 40)
                     $('.container .currentBG').text('LOW');
+                    $('.container .currentDelta').text('');
                 else if (focusPoint.y > 400)
                     $('.container .currentBG').text('HIGH');
+                    $('.container .currentDelta').text('');
                 else
                     $('.container .currentBG').text(focusPoint.sgv);
-                    var retroDelta = scaleBg(focusPoint.y) - scaleBg(prevfocusPoint.y);
-                    if (browserSettings.units == "mmol") {
-                        retroDelta = retroDelta.toFixed(1);
+                    $('.container .currentDelta').text('');
+                    if (prevfocusPoint.y >= 40) {
+                        var retroDelta = scaleBg(focusPoint.y) - scaleBg(prevfocusPoint.y);
+                        if (browserSettings.units == "mmol") {
+                            retroDelta = retroDelta.toFixed(1);
+                        }
+                        if (retroDelta < 0) {
+                            var retroDeltaString = retroDelta;
+                        }
+                        else {
+                            var retroDeltaString = "+" + retroDelta;
+                        }
+                        if (browserSettings.units == "mmol") {
+                        var retroDeltaString = retroDeltaString + " mmol/L"
+                        }
+                        else {
+                        var retroDeltaString = retroDeltaString + " mg/dL"
+                        }
+                        $('.container .currentDelta')
+                            .text(retroDeltaString)
+                            .css('text-decoration','line-through');
                     }
-                    if (retroDelta < 0) {
-                        var retroDeltaString = retroDelta;
-                    }
-                    else {
-                        var retroDeltaString = "+" + retroDelta;
-                    }
-                    if (browserSettings.units == "mmol") {
-                    var retroDeltaString = retroDeltaString + " mmol/L"
-                    }
-                    else {
-                    var retroDeltaString = retroDeltaString + " mg/dL"
-                    }
-
                 $('.container .currentBG').css('text-decoration','line-through');
-                $('.container .currentDelta')
-                    .text(retroDeltaString)
-                    .css('text-decoration','line-through');
                 $('.container .currentDirection').html(focusPoint.direction)
             } else {
                 $('.container .currentBG')
@@ -371,6 +375,8 @@
 
                 $('.container .currentBG').html(errorDisplay)
                     .css('text-decoration', '');
+                $('.container .currentDelta').text('')
+                    .css('text-decoration','');
                 $('.container .currentDirection').html('✖');
 
                 var color = sgvToColor(errorCode);
@@ -385,31 +391,35 @@
                 //in this case the SGV is unscaled
                 if (latestSGV.y < 40)
                     $('.container .currentBG').text('LOW');
+                    $('.container .currentDelta').text('');
                 else if (latestSGV.y > 400)
                     $('.container .currentBG').text('HIGH');
+                    $('.container .currentDelta').text('');
                 else
                     $('.container .currentBG').text(scaleBg(latestSGV.y));
-		            var bgDelta = scaleBg(latestSGV.y) - scaleBg(prevSGV.y);
-                    if (browserSettings.units == "mmol") {
-                        bgDelta = bgDelta.toFixed(1);
+                    $('.container .currentDelta').text('');
+                    if (prevSGV.y >= 40) {
+    		            var bgDelta = scaleBg(latestSGV.y) - scaleBg(prevSGV.y);
+                        if (browserSettings.units == "mmol") {
+                            bgDelta = bgDelta.toFixed(1);
+                        }
+                        if (bgDelta < 0) {
+                            var bgDeltaString = bgDelta;
+                        }
+    		            else {
+    			            var bgDeltaString = "+" + bgDelta;
+    		            }
+                        if (browserSettings.units == "mmol") {
+                            var bgDeltaString = bgDeltaString + " mmol/L"
+                        }
+                        else {
+                            var bgDeltaString = bgDeltaString + " mg/dL"
+                        }
+                        $('.container .currentDelta')
+                            .text(bgDeltaString)
+                            .css('text-decoration','');
                     }
-                    if (bgDelta < 0) {
-                        var bgDeltaString = bgDelta;
-                    }
-		            else {
-			            var bgDeltaString = "+" + bgDelta;
-		            }
-                    if (browserSettings.units == "mmol") {
-                        var bgDeltaString = bgDeltaString + " mmol/L"
-                    }
-                    else {
-                        var bgDeltaString = bgDeltaString + " mg/dL"
-                    }
-
                 $('.container .currentBG').css('text-decoration', '');
-                $('.container .currentDelta')
-                    .text(bgDeltaString)
-                    .css('text-decoration','');
                 $('.container .currentDirection').html(latestSGV.direction);
 
                 var color = sgvToColor(latestSGV.y);
