@@ -326,6 +326,7 @@
                 $('.container .currentBG')
                     .text("---")
                     .css('text-decoration','');
+                $('.container .currentDelta').text('');
             }
             $('#currentTime')
                 .text(formatTime(new Date(brushExtent[1] - THIRTY_MINS_IN_MS)))
