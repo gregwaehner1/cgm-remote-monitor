@@ -291,7 +291,8 @@
                 var prevfocusPoint = nowData[nowData.length - 2];
 
                 //in this case the SGV is scaled
-                $('.container .currentDelta').text('');
+                $('.container .currentDelta').text('')
+                    .css('text-decoration','line-through');
                 if (focusPoint.y < 40) 
                     $('.container .currentBG').text('LOW');
                 else if (focusPoint.y > 400) 
