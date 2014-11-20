@@ -333,6 +333,7 @@
             $('#lastEntry').text("RETRO").removeClass('current');
 
             $('.container #noButton .currentBG').css({color: 'grey'});
+            $('.container #noButton .currentDelta').css({color: 'grey'{);
             $('.container #noButton .currentDirection').css({color: 'grey'});
 
         } else {
