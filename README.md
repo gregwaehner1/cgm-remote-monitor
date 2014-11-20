@@ -7,6 +7,7 @@ cgm-remote-monitor (a.k.a. NightScout)
 
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[ ![Codeship Status for jimsiff/cgm-remote-monitor](https://codeship.com/projects/98331910-5312-0132-ed50-62b9108cb0f3/status)](https://codeship.com/projects/48855)
 
 This acts as a web-based CGM (Continuous Glucose Montinor) to allow
 multiple caregivers to remotely view a patients glucose data in
