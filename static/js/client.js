@@ -291,13 +291,15 @@
                 var prevfocusPoint = nowData[nowData.length - 2];
 
                 //in this case the SGV is scaled
-                if (focusPoint.y < 40)
+                if (focusPoint.y < 40) {
                     $('.container .currentBG').text('LOW');
                     $('.container .currentDelta').text('');
-                else if (focusPoint.y > 400)
+                }
+                else if (focusPoint.y > 400) {
                     $('.container .currentBG').text('HIGH');
                     $('.container .currentDelta').text('');
-                else
+                }
+                else {
                     $('.container .currentBG').text(focusPoint.sgv);
                     $('.container .currentDelta').text('');
                     if (prevfocusPoint.y >= 40) {
@@ -321,6 +323,7 @@
                             .text(retroDeltaString)
                             .css('text-decoration','line-through');
                     }
+                }
                 $('.container .currentBG').css('text-decoration','line-through');
                 $('.container .currentDirection').html(focusPoint.direction)
             } else {
@@ -389,13 +392,15 @@
                 $('#lastEntry').text(timeAgo(secsSinceLast)).toggleClass('current', secsSinceLast < 10 * 60);
 
                 //in this case the SGV is unscaled
-                if (latestSGV.y < 40)
+                if (latestSGV.y < 40) {
                     $('.container .currentBG').text('LOW');
                     $('.container .currentDelta').text('');
-                else if (latestSGV.y > 400)
+                }   
+                else if (latestSGV.y > 400) {
                     $('.container .currentBG').text('HIGH');
                     $('.container .currentDelta').text('');
-                else
+                }
+                else {
                     $('.container .currentBG').text(scaleBg(latestSGV.y));
                     $('.container .currentDelta').text('');
                     if (prevSGV.y >= 40) {
@@ -419,6 +424,7 @@
                             .text(bgDeltaString)
                             .css('text-decoration','');
                     }
+                }
                 $('.container .currentBG').css('text-decoration', '');
                 $('.container .currentDirection').html(latestSGV.direction);
 
