@@ -12,17 +12,17 @@
     },
     "ENABLE": {
       "description": "Space delimited list of optional features to enable.  Leave blank for a default site.",
-      "value": ""
+      "value": "",
       "required": "false"
     },
     "PUSHOVER_API_TOKEN": {
       "description": "Pushover API token, required for Pushover notifications.  Leave blank for a default site.",
-      "value": ""
+      "value": "",
       "required": "false"
     },
     "PUSHOVER_USER_KEY": {
       "description": "Pushover user key, required for Pushover notifications.  Leave blank for a default site.",
-      "value": ""
+      "value": "",
       "required": "false"
     }
   },
