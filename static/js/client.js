@@ -17,7 +17,8 @@
         prevChartHeight = 0,
         focusHeight,
         contextHeight,
-        UPDATE_TRANS_MS = 750, // milliseconds
+        // disabled, as the brush transitions are slow enough as it is
+        UPDATE_TRANS_MS = 0, // duration of update transitions (moving BG dots when you brush) in milliseconds 
         brush,
         BRUSH_TIMEOUT = 300000,  // 5 minutes in ms
         brushTimer,
@@ -214,7 +215,7 @@
             .transition()
             .duration(UPDATE_TRANS_MS)
             .call(brush.extent([new Date(dataRange[1].getTime() - FOCUS_DATA_RANGE_MS), dataRange[1]]));
-        brushed(true);
+        brushed(true, true);
 
         // clear user brush tracking
         brushInProgress = false;
@@ -228,6 +229,8 @@
     }
 
     function brushEnded() {
+        // when we're done brushing, re-run brushed() again with retroPredictions enabled
+        brushed(false, true);
         // update the opacity of the context data points to brush extent
         context.selectAll('circle')
             .data(data)
@@ -235,7 +238,8 @@
     }
 
     // function to call when context chart is brushed
-    function brushed(skipTimer) {
+    // if we're brushing, don't display retroPredictions, as they're too slow
+    function brushed(skipTimer, retroPredict) {
 
         if (!skipTimer) {
             // set a timer to reset focus chart to real-time data
@@ -276,6 +280,10 @@
         var nowDate = new Date(brushExtent[1] - predict_hr * SIXTY_MINS_IN_MS);
 
         // predict for retrospective data
+        // by changing lookback from 1 to 2, we modify the AR algorithm to determine its initial slope from 10m
+        // of data instead of 5, which eliminates the incorrect and misleading predictions generated when
+        // the dexcom switches from unfiltered to filtered at the start of a rapid rise or fall, while preserving
+        // almost identical predications at other times.
         var lookback=2;
         var retroLookback = browserSettings.retroLookback;
         var retroStart = FOCUS_DATA_RANGE_MS+(retroLookback/60)*SIXTY_MINS_IN_MS;
@@ -305,7 +313,7 @@
             });
             if (nowData.length > lookback) {
                 var time = new Date(brushExtent[1] - predict_hr * SIXTY_MINS_IN_MS);
-                if (retroLookback > 0) {
+                if (retroLookback > 0 && retroPredict) {
                     var retroPrediction = retroPredictBgs(sgvData, treatments.slice(treatments.length-200, treatments.length), profile, retroLookback, lookback);
                     focusData = focusData.concat(retroPrediction);
                 }
@@ -843,11 +851,11 @@
         if (!brushInProgress) {
             updateBrush
                 .call(brush.extent([new Date(dataRange[1].getTime() - FOCUS_DATA_RANGE_MS), dataRange[1]]));
-            brushed(true);
+            brushed(true, true);
         } else {
             updateBrush
                 .call(brush.extent([currentBrushExtent[0], currentBrushExtent[1]]));
-            brushed(true);
+            brushed(true, true);
         }
 
         // bind up the context chart data to an array of circles
@@ -948,10 +956,18 @@
 
             cal = d[6][d[6].length-1];
 
-            var temp1 = d[0].map(function (obj) {
-                var rawBg = rawIsigToRawBg(obj.unfiltered, cal.scale, cal.intercept, cal.slope, obj.filtered, obj.y);
-                return { date: new Date(obj.x-2*1000), y: rawBg, sgv: scaleBg(rawBg), color: 'white', type: 'rawbg'}
-            });
+            var temp1 = [ ];
+            if (cal) {
+              temp1 = d[0].map(function (obj) {
+                  var rawBg = rawIsigToRawBg(obj.unfiltered
+                    , cal.scale || [ ]
+                    , cal.intercept
+                    , cal.slope || [ ]
+                    , obj.filtered
+                    , obj.y);
+                  return { date: new Date(obj.x-2*1000), y: rawBg, sgv: scaleBg(rawBg), color: 'white', type: 'rawbg'}
+              });
+            }
             var temp2 = d[0].map(function (obj) {
                 return { date: new Date(obj.x), y: obj.y, sgv: scaleBg(obj.y), direction: obj.direction, color: sgvToColor(obj.y), type: 'sgv'}
             });
@@ -1104,7 +1120,7 @@
         // only emit ack if client invoke by button press
         if (isClient) {
             socket.emit('ack', currentAlarmType || 'alarm', silenceTime);
-            brushed(false);
+            brushed(false, true);
         }
     }
 
@@ -1453,7 +1469,7 @@
         sgv=parseInt(current[current.length-1].sgv);
         if (sgv < 30) {
             var obj = latestSGV;
-            sgv = rawIsigToRawBg(obj.rawIsig, obj.scale, obj.intercept, obj.slope, obj.filtered, obj.y);
+            sgv = rawIsigToRawBg(obj.rawIsig, obj.scale || [ ], obj.intercept, obj.slope, obj.filtered, obj.y);
         }
         var predBgs = [];
         var bgi = sgv;
