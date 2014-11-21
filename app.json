@@ -9,9 +9,21 @@
     "API_SECRET": {
       "description": "User generated password required for REST API and other features (12 character minimum).",
       "value": ""
+    },
+    "ENABLE": {
+      "description": "Space delimited list of optional features to enable.  Leave blank for a default site.",
+      "value": ""
+    },
+    "PUSHOVER_API_TOKEN": {
+      "description": "Pushover API token, required for Pushover notifications.  Leave blank for a default site.",
+      "value": ""
+    },
+    "PUSHOVER_USER_KEY": {
+      "description": "Pushover user key, required for Pushover notifications.  Leave blank for a default site.",
+      "value": ""
     }
   },
   "addons": [
-    "mongolab"
+    "mongolab:sandbox"
   ]
 }
