@@ -3,7 +3,7 @@
   "repository": "https://github.com/nightscout/cgm-remote-monitor",
   "env": {
     "MONGO_COLLECTION": {
-      "description": "The mongo collection to connect to.",
+      "description": "The mongo collection for CGM data.  Most users should leave this as default.",
       "value": "entries"
     },
     "API_SECRET": {
