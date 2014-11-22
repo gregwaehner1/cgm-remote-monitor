@@ -30,5 +30,6 @@
   },
   "addons": [
     "mongolab:sandbox"
+    "codeship:free"
   ]
 }
