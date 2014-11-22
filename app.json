@@ -29,7 +29,7 @@
     }
   },
   "addons": [
-    "mongolab:sandbox"
+    "mongolab:sandbox",
     "codeship:free"
   ]
 }
